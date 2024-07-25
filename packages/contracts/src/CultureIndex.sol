@@ -42,7 +42,7 @@ contract CultureIndex is
     ///                         CONSTRUCTOR                      ///
     ///                                                          ///
 
-    constructor(address _manager) payable initializer {}
+    constructor() payable initializer {}
 
     ///                                                          ///
     ///                         INITIALIZER                      ///

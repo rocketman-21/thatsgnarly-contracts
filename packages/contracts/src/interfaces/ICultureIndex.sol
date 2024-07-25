@@ -13,34 +13,6 @@ interface ICultureIndexEvents {
 
     event ERC721VotingTokenLocked();
 
-    /// @notice The CultureIndex parameters
-    /// @param name The name of the culture index
-    /// @param description A description for the culture index
-    /// @param checklist A checklist for the culture index, can include rules for uploads etc.
-    /// @param template A template for the culture index, an ipfs file that artists can download and use to create art pieces
-    /// @param tokenVoteWeight The voting weight of the individual Revolution ERC721 tokens. Normally a large multiple to match up with daily emission of ERC20 points to match up with daily emission of ERC20 points (which normally have 18 decimals)
-    /// @param pointsVoteWeight The voting weight of the individual Revolution ERC20 points tokens.
-    /// @param quorumVotesBPS The initial quorum votes threshold in basis points
-    /// @param minVotingPowerToVote The minimum vote weight that a voter must have to be able to vote.
-    /// @param minVotingPowerToCreate The minimum vote weight that a voter must have to be able to create an art piece.
-    /// @param pieceMaximums The maxium length for each field in an art piece
-    /// @param requiredMediaType The required media type for each art piece eg: image only
-    /// @param requiredMediaPrefix The required media prefix for each art piece eg: ipfs://
-    struct CultureIndexParams {
-        string name;
-        string description;
-        string checklist;
-        string template;
-        uint256 tokenVoteWeight;
-        uint256 pointsVoteWeight;
-        uint256 quorumVotesBPS;
-        uint256 minVotingPowerToVote;
-        uint256 minVotingPowerToCreate;
-        ICultureIndex.PieceMaximums pieceMaximums;
-        ICultureIndex.MediaType requiredMediaType;
-        ICultureIndex.RequiredMediaPrefix requiredMediaPrefix;
-    }
-
     /**
      * @dev Emitted when a new piece is created.
      * @param pieceId Unique identifier for the newly created piece.
@@ -86,6 +58,34 @@ interface ICultureIndexEvents {
  * @dev This interface defines the methods for the CultureIndex contract for art piece management and voting.
  */
 interface ICultureIndex is ICultureIndexEvents {
+    /// @notice The CultureIndex parameters
+    /// @param name The name of the culture index
+    /// @param description A description for the culture index
+    /// @param checklist A checklist for the culture index, can include rules for uploads etc.
+    /// @param template A template for the culture index, an ipfs file that artists can download and use to create art pieces
+    /// @param tokenVoteWeight The voting weight of the individual Revolution ERC721 tokens. Normally a large multiple to match up with daily emission of ERC20 points to match up with daily emission of ERC20 points (which normally have 18 decimals)
+    /// @param pointsVoteWeight The voting weight of the individual Revolution ERC20 points tokens.
+    /// @param quorumVotesBPS The initial quorum votes threshold in basis points
+    /// @param minVotingPowerToVote The minimum vote weight that a voter must have to be able to vote.
+    /// @param minVotingPowerToCreate The minimum vote weight that a voter must have to be able to create an art piece.
+    /// @param pieceMaximums The maxium length for each field in an art piece
+    /// @param requiredMediaType The required media type for each art piece eg: image only
+    /// @param requiredMediaPrefix The required media prefix for each art piece eg: ipfs://
+    struct CultureIndexParams {
+        string name;
+        string description;
+        string checklist;
+        string template;
+        uint256 tokenVoteWeight;
+        uint256 pointsVoteWeight;
+        uint256 quorumVotesBPS;
+        uint256 minVotingPowerToVote;
+        uint256 minVotingPowerToCreate;
+        ICultureIndex.PieceMaximums pieceMaximums;
+        ICultureIndex.MediaType requiredMediaType;
+        ICultureIndex.RequiredMediaPrefix requiredMediaPrefix;
+    }
+
     ///                                                          ///
     ///                           ERRORS                         ///
     ///                                                          ///
