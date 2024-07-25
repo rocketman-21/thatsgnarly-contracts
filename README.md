@@ -1,1 +1,1 @@
-# lil-vrgda
+# thatsgnarly contracts

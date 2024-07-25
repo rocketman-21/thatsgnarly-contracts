@@ -1,7 +1,7 @@
 {
-  "name": "@lil-vrgda/contracts",
+  "name": "@thatsgnarly/contracts",
   "version": "0.0.1",
-  "repository": "https://github.com/rocketman-21/lil-vrgda.git",
+  "repository": "https://github.com/rocketman-21/thatsgnarly-contracts.git",
   "main": "./dist/index.js",
   "types": "./dist/package/index.d.ts",
   "type": "module",

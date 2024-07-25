@@ -1,5 +1,5 @@
 {
-  "name": "lil-vrgda",
+  "name": "thatsgnarly-contracts",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -33,11 +33,11 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/rocketman-21/lil-vrgda/issues"
+    "url": "https://github.com/rocketman-21/thatsgnarly-contracts/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rocketman-21/lil-vrgda.git"
+    "url": "git+https://github.com/rocketman-21/thatsgnarly-contracts.git"
   },
   "version": "0.0.1",
   "dependencies": {
