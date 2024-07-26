@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.22;
 
-import { Ownable2StepUpgradeable } from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
+import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { ReentrancyGuardUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import { EIP712Upgradeable } from "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
@@ -17,7 +17,7 @@ import { CultureIndexStorageV1 } from "./storage/CultureIndexStorageV1.sol";
 contract CultureIndex is
     ICultureIndex,
     UUPS,
-    Ownable2StepUpgradeable,
+    OwnableUpgradeable,
     ReentrancyGuardUpgradeable,
     EIP712Upgradeable,
     CultureIndexStorageV1
@@ -65,7 +65,6 @@ contract CultureIndex is
     ) external initializer {
         if (_cultureIndexParams.quorumVotesBPS > MAX_QUORUM_VOTES_BPS) revert INVALID_QUORUM_BPS();
         if (_cultureIndexParams.tokenVoteWeight <= 0) revert INVALID_ERC721_VOTING_WEIGHT();
-        if (_cultureIndexParams.pointsVoteWeight <= 0) revert INVALID_ERC20_VOTING_WEIGHT();
         if (_gnarsToken == address(0)) revert ADDRESS_ZERO();
         if (_initialOwner == address(0)) revert ADDRESS_ZERO();
 

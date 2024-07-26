@@ -30,6 +30,8 @@ contract DeployContracts is Script {
         uint256 key = vm.envUint("PRIVATE_KEY");
         initialOwner = vm.addr(key);
 
+        console2.log("Initial Owner Address:", initialOwner);
+
         address deployerAddress = vm.addr(key);
 
         vm.startBroadcast(deployerAddress);
@@ -39,6 +41,8 @@ contract DeployContracts is Script {
 
         cultureIndexProxy = deployCultureIndexProxy();
         maxHeapProxy = deployMaxHeapProxy();
+
+        initializeProxies();
 
         vm.stopBroadcast();
 
