@@ -38,9 +38,6 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The minimum price accepted in a mint
     uint256 public price;
 
-    // The split of the mint proceeds that is reserved for the creator of the Art Piece in basis points
-    uint256 public creatorRateBps;
-
     // The duration of a single mint in seconds
     uint256 public duration;
 
@@ -88,7 +85,6 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         price = _mintParams.price;
         duration = _mintParams.duration;
         interval = _mintParams.interval;
-        creatorRateBps = _mintParams.creatorRateBps;
 
         // set contracts
         cultureIndex = ICultureIndex(_cultureIndex);
@@ -111,18 +107,6 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      */
     function pause() external override onlyOwner {
         _pause();
-    }
-
-    /**
-     * @notice Set the split of the winning bid that is reserved for the creator of the Art Piece (token) in basis points.
-     * @dev Only callable by the owner.
-     * @param _creatorRateBps New creator rate in basis points.
-     */
-    function setCreatorRateBps(uint256 _creatorRateBps) external onlyOwner {
-        if (_creatorRateBps > 10_000) revert INVALID_BPS();
-        creatorRateBps = _creatorRateBps;
-
-        emit CreatorRateBpsUpdated(_creatorRateBps);
     }
 
     /**
@@ -203,15 +187,9 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
             // TODO get tokenId
             uint256 tokenId = 0;
 
-            mint = Mint({
-                tokenId: tokenId,
-                startTime: startTime,
-                endTime: endTime,
-                price: price,
-                creatorRateBps: creatorRateBps
-            });
+            mint = Mint({ tokenId: tokenId, startTime: startTime, endTime: endTime, price: price });
 
-            emit MintCreated(tokenId, startTime, endTime, price, creatorRateBps);
+            emit MintCreated(tokenId, startTime, endTime, price);
         } catch {
             _pause();
         }
