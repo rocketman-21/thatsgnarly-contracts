@@ -165,6 +165,9 @@ interface ICultureIndex is ICultureIndexEvents {
     /// @dev Reverts if the creator's BPS specified is invalid
     error INVALID_CREATOR_BPS();
 
+    /// @dev Reverts if the tokenURI is invalid
+    error INVALID_TOKEN_URI();
+
     ///                                                          ///
     ///                         CONSTANTS                        ///
     ///                                                          ///
@@ -190,8 +193,7 @@ interface ICultureIndex is ICultureIndexEvents {
         NONE, // never used by end user, only used in CultureIndex when using requriedMediaType
         IMAGE,
         ANIMATION,
-        AUDIO,
-        TEXT
+        AUDIO
     }
 
     // Struct defining metadata for an art piece.
@@ -200,7 +202,7 @@ interface ICultureIndex is ICultureIndexEvents {
         string description;
         MediaType mediaType;
         string image;
-        string text;
+        string tokenURI;
         string animationUrl;
     }
 
@@ -226,18 +228,6 @@ interface ICultureIndex is ICultureIndexEvents {
         address sponsor;
         bool isDropped;
         uint256 creationBlock;
-    }
-
-    /**
-     * @dev Struct defining an art piece for use in a token
-     *@param pieceId Unique identifier for the piece.
-     * @param creators Creators of the art piece.
-     * @param sponsor Address that created the piece.
-     */
-    struct ArtPieceCondensed {
-        uint256 pieceId;
-        CreatorBps[] creators;
-        address sponsor;
     }
 
     // Constant for max number of creators
@@ -355,9 +345,9 @@ interface ICultureIndex is ICultureIndexEvents {
     /**
      * @notice Officially release or "drop" the art piece with the most votes.
      * @dev This function also updates internal state to reflect the piece's dropped status.
-     * @return The ArtPiece struct of the top voted piece that was just dropped.
+     * @return The tokenURI (ipfs hash)
      */
-    function dropTopVotedPiece() external returns (ArtPieceCondensed memory);
+    function dropTopVotedPiece() external returns (string memory);
 
     /**
      * @notice Initializes a token's metadata descriptor

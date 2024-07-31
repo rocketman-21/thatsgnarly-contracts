@@ -190,9 +190,9 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         if (mint.startTime + interval > block.timestamp) revert DROP_NOT_COMPLETED();
 
         // Use try/catch to handle potential failure
-        try cultureIndex.dropTopVotedPiece() returns (ICultureIndex.ArtPieceCondensed memory artPiece) {
+        try cultureIndex.dropTopVotedPiece() returns (string memory tokenURI) {
             // create mint with referral to DAO
-            uint256 tokenId = zoraCreator1155.setupNewTokenWithCreateReferral("TODO", 18446744073709551615, gnarsDAO);
+            uint256 tokenId = zoraCreator1155.setupNewTokenWithCreateReferral(tokenURI, 18446744073709551615, gnarsDAO);
 
             // todo
             uint256 startTime = block.timestamp;

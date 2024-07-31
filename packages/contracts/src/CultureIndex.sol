@@ -18,6 +18,7 @@ import { CultureIndexStorageV1 } from "./storage/CultureIndexStorageV1.sol";
  * @dev This contract has undergone the following modifications from Revolution:
  * - Removed quorum requirements for dropping art pieces.
  * - Changed the snapshot mechanism to use block.timestamp instead of block.number.
+ * - Removed the text field from the ArtPieceMetadata struct in favor of tokenURI
  */
 
 contract CultureIndex is
@@ -161,15 +162,12 @@ contract CultureIndex is
 
         uint256 imageLength = bytes(metadata.image).length;
         uint256 animationUrlLength = bytes(metadata.animationUrl).length;
-        uint256 textLength = bytes(metadata.text).length;
         uint256 nameLength = bytes(metadata.name).length;
 
         if (mediaType == MediaType.IMAGE && imageLength == 0) {
             revert INVALID_IMAGE();
         } else if ((mediaType == MediaType.ANIMATION || mediaType == MediaType.AUDIO) && animationUrlLength == 0) {
             revert INVALID_ANIMATION_URL();
-        } else if (mediaType == MediaType.TEXT && textLength == 0) {
-            revert INVALID_TEXT();
         }
 
         // ensure all fields of metadata are within reasonable bounds
@@ -179,8 +177,6 @@ contract CultureIndex is
 
         if (animationUrlLength > PIECE_DATA_MAXIMUMS.animationUrl) revert INVALID_ANIMATION_URL();
 
-        if (textLength > PIECE_DATA_MAXIMUMS.text) revert INVALID_TEXT();
-
         //ensure name is not too large
         if (nameLength > PIECE_DATA_MAXIMUMS.name) revert INVALID_NAME();
 
@@ -189,6 +185,11 @@ contract CultureIndex is
         // ensure animation url starts with ipfs://
         if (animationUrlLength > 0 && !Strings.equal(_substring(metadata.animationUrl, 0, 7), (ipfsPrefix)))
             revert INVALID_ANIMATION_URL();
+
+        // ensure tokenURI is not empty and starts with ipfs, and isn't huge
+        if (bytes(metadata.tokenURI).length == 0) revert INVALID_TOKEN_URI();
+        if (bytes(metadata.tokenURI).length > 200) revert INVALID_TOKEN_URI();
+        if (!Strings.equal(_substring(metadata.tokenURI, 0, 7), (ipfsPrefix))) revert INVALID_TOKEN_URI();
 
         // ensure image url starts with ipfs:// or data:image/svg+xml;base64,
         if (imageLength > 0) {
@@ -569,9 +570,9 @@ contract CultureIndex is
 
     /**
      * @notice Pulls and drops the top-voted piece.
-     * @return The top voted piece
+     * @return The top voted piece tokenURI
      */
-    function dropTopVotedPiece() public nonReentrant returns (ArtPieceCondensed memory) {
+    function dropTopVotedPiece() public nonReentrant returns (string memory) {
         if (msg.sender != dropperAdmin) revert NOT_DROPPER_ADMIN();
 
         uint256 pieceId = topVotedPieceId();
@@ -586,12 +587,7 @@ contract CultureIndex is
 
         emit PieceDropped(pieceId, msg.sender);
 
-        return
-            ICultureIndex.ArtPieceCondensed({
-                pieceId: pieceId,
-                creators: pieces[pieceId].creators,
-                sponsor: pieces[pieceId].sponsor
-            });
+        return pieces[pieceId].metadata.tokenURI;
     }
 
     function maxNameLength() external view returns (uint256) {
