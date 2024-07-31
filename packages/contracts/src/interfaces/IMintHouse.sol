@@ -93,12 +93,16 @@ interface IMintHouse is IMintHouseEvents {
      * @param initialOwner The address of the owner.
      * @param cultureIndex The address of the culture index.
      * @param zoraCreator1155 The address of the Zora Creator ERC1155 contract.
+     * @param gnarsDAO The address of the GnarsDAO.
+     * @param zoraCreatorFixedPriceSaleStrategy The address of the Zora Creator Fixed Price Sale Strategy.
      * @param mintParams The mint params for mints.
      */
     function initialize(
         address initialOwner,
         address cultureIndex,
         address zoraCreator1155,
+        address gnarsDAO,
+        address zoraCreatorFixedPriceSaleStrategy,
         MintParams calldata mintParams
     ) external;
 }

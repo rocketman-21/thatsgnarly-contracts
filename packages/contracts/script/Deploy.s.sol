@@ -17,6 +17,10 @@ contract DeployContracts is Script {
     // gnars token on base
     address token = 0x880Fb3Cf5c6Cc2d7DFC13a993E839a9411200C17;
 
+    address gnarsDAO = 0x72aD986ebAc0246D2b3c565ab2a1ce3a14cE6f88;
+
+    address zoraCreatorFixedPriceSaleStrategy = 0x04E2516A2c207E84a1839755675dfd8eF6302F0a;
+
     address cultureIndexImpl;
     address maxHeapImpl;
 

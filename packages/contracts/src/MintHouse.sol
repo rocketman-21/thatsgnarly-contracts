@@ -59,10 +59,10 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
 
     //TODO update this to initializer not hard coded
     // The GnarsDAO address to receive protocol rewards
-    address public gnarsDAO = 0x72aD986ebAc0246D2b3c565ab2a1ce3a14cE6f88;
+    address public gnarsDAO;
 
     // The fixed price sale strategy contract from Zora
-    address public zoraCreatorFixedPriceSaleStrategy = 0x04E2516A2c207E84a1839755675dfd8eF6302F0a;
+    address public zoraCreatorFixedPriceSaleStrategy;
 
     ///                                                          ///
     ///                         CONSTRUCTOR                      ///
@@ -81,12 +81,16 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * @param _initialOwner The address of the owner.
      * @param _cultureIndex The address of the culture index.
      * @param _zoraCreator1155 The address of the Zora Creator ERC1155 contract.
+     * @param _gnarsDAO The address of the GnarsDAO.
+     * @param _zoraCreatorFixedPriceSaleStrategy The address of the Zora Creator Fixed Price Sale Strategy.
      * @param _mintParams The mint params for mints.
      */
     function initialize(
         address _initialOwner,
         address _cultureIndex,
         address _zoraCreator1155,
+        address _gnarsDAO,
+        address _zoraCreatorFixedPriceSaleStrategy,
         MintParams calldata _mintParams
     ) external initializer {
         if (_cultureIndex == address(0)) revert ADDRESS_ZERO();
