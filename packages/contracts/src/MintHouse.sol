@@ -54,6 +54,9 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The Zora Creator ERC1155 contract
     IZoraCreator1155 public zoraCreator1155;
 
+    // The GnarsDAO address to receive protocol rewards
+    address public gnarsDAO = 0x72aD986ebAc0246D2b3c565ab2a1ce3a14cE6f88;
+
     ///                                                          ///
     ///                         CONSTRUCTOR                      ///
     ///                                                          ///
@@ -188,12 +191,12 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
 
         // Use try/catch to handle potential failure
         try cultureIndex.dropTopVotedPiece() returns (ICultureIndex.ArtPieceCondensed memory artPiece) {
+            // create mint with referral to DAO
+            uint256 tokenId = zoraCreator1155.setupNewTokenWithCreateReferral("TODO", 18446744073709551615, gnarsDAO);
+
             // todo
             uint256 startTime = block.timestamp;
             uint256 endTime = startTime + duration;
-
-            // TODO get tokenId
-            uint256 tokenId = 0;
 
             mint = Mint({ tokenId: tokenId, startTime: startTime, endTime: endTime, price: price });
 
