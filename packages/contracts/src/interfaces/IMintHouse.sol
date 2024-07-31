@@ -28,7 +28,7 @@ interface IMintHouseEvents {
         uint256 ethPaidToCreators
     );
 
-    event PriceUpdated(uint256 mintPrice);
+    event PriceUpdated(uint256 price);
 
     event CreatorRateBpsUpdated(uint256 rateBps);
 
@@ -108,14 +108,14 @@ interface IMintHouse is IMintHouseEvents {
 
     /**
      * @notice The mint parameters
-     * @param mintPrice The reserve price of each mint
+     * @param price The price of each mint
      * @param duration The duration of each mint
      * @param creatorRateBps The creator rate basis points of each mint - the share of the winning bid that is reserved for the creator
      * @param minCreatorRateBps The minimum creator rate basis points of each mint
      */
     struct MintParams {
         uint256 timeBuffer;
-        uint256 mintPrice;
+        uint256 price;
         uint256 duration;
         uint256 creatorRateBps;
         uint256 minCreatorRateBps;
@@ -127,7 +127,7 @@ interface IMintHouse is IMintHouseEvents {
 
     function unpause() external;
 
-    function setMintPrice(uint256 mintPrice) external;
+    function setPrice(uint256 price) external;
 
     function setCreatorRateBps(uint256 _creatorRateBps) external;
 
