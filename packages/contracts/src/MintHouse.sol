@@ -194,23 +194,27 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         // startTime of last mint + interval < now
         if (mint.startTime + interval > block.timestamp) revert DROP_NOT_COMPLETED();
 
-        // TODO fill in
-        // try revolutionToken.mint() returns (uint256 tokenId) {
-        //     uint256 startTime = block.timestamp;
-        //     uint256 endTime = startTime + duration;
-        //     mint = Mint({
-        //         tokenId: tokenId,
-        //         amount: 0,
-        //         startTime: startTime,
-        //         endTime: endTime,
-        //         bidder: payable(0),
-        //         settled: false,
-        //         referral: payable(0)
-        //     });
-        //     emit MintCreated(tokenId, startTime, endTime);
-        // } catch {
-        //     _pause();
-        // }
+        // Use try/catch to handle potential failure
+        try cultureIndex.dropTopVotedPiece() returns (ICultureIndex.ArtPieceCondensed memory artPiece) {
+            // todo
+            uint256 startTime = block.timestamp;
+            uint256 endTime = startTime + duration;
+
+            // TODO get tokenId
+            uint256 tokenId = 0;
+
+            mint = Mint({
+                tokenId: tokenId,
+                startTime: startTime,
+                endTime: endTime,
+                price: price,
+                creatorRateBps: creatorRateBps
+            });
+
+            emit MintCreated(tokenId, startTime, endTime, price, creatorRateBps);
+        } catch {
+            _pause();
+        }
     }
 
     ///                                                          ///

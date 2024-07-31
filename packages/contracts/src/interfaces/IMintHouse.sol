@@ -20,7 +20,13 @@ pragma solidity ^0.8.22;
 import { ICultureIndex } from "./ICultureIndex.sol";
 
 interface IMintHouseEvents {
-    event MintCreated(uint256 indexed tokenId, uint256 startTime, uint256 endTime);
+    event MintCreated(
+        uint256 indexed tokenId,
+        uint256 startTime,
+        uint256 endTime,
+        uint256 price,
+        uint256 creatorRateBps
+    );
 
     event PriceUpdated(uint256 price);
 
@@ -62,6 +68,8 @@ interface IMintHouse is IMintHouseEvents {
         uint256 startTime;
         // The time that the mint is scheduled to end
         uint256 endTime;
+        // The creator rate basis points of each mint - the share of the winning bid that is reserved for the creator
+        uint256 creatorRateBps;
     }
 
     /**
