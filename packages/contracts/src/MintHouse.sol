@@ -38,11 +38,8 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The minimum price accepted in a mint
     uint256 public price;
 
-    // The split of the winning bid that is reserved for the creator of the Art Piece in basis points
+    // The split of the mint proceeds that is reserved for the creator of the Art Piece in basis points
     uint256 public creatorRateBps;
-
-    // The all time minimum split of the winning bid that is reserved for the creator of the Art Piece in basis points
-    uint256 public minCreatorRateBps;
 
     // The duration of a single mint in seconds
     uint256 public duration;
@@ -77,15 +74,11 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
 
         _pause();
 
-        if (_mintParams.creatorRateBps < _mintParams.minCreatorRateBps) revert CREATOR_RATE_TOO_LOW();
-
         // set mint params
         price = _mintParams.price;
         duration = _mintParams.duration;
-
-        // set creator payout params
+        interval = _mintParams.interval;
         creatorRateBps = _mintParams.creatorRateBps;
-        minCreatorRateBps = _mintParams.minCreatorRateBps;
     }
 
     /**
@@ -113,30 +106,10 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * @param _creatorRateBps New creator rate in basis points.
      */
     function setCreatorRateBps(uint256 _creatorRateBps) external onlyOwner {
-        if (_creatorRateBps < minCreatorRateBps) revert CREATOR_RATE_TOO_LOW();
-
         if (_creatorRateBps > 10_000) revert INVALID_BPS();
         creatorRateBps = _creatorRateBps;
 
         emit CreatorRateBpsUpdated(_creatorRateBps);
-    }
-
-    /**
-     * @notice Set the minimum split of the winning bid that is reserved for the creator of the Art Piece (token) in basis points.
-     * @dev Only callable by the owner.
-     * @param _minCreatorRateBps New minimum creator rate in basis points.
-     */
-    function setMinCreatorRateBps(uint256 _minCreatorRateBps) external onlyOwner {
-        if (_minCreatorRateBps > creatorRateBps) revert MIN_CREATOR_RATE_ABOVE_CREATOR_RATE();
-
-        if (_minCreatorRateBps > 10_000) revert INVALID_BPS();
-
-        //ensure new min rate cannot be lower than previous min rate
-        if (_minCreatorRateBps <= minCreatorRateBps) revert MIN_CREATOR_RATE_NOT_INCREASED();
-
-        minCreatorRateBps = _minCreatorRateBps;
-
-        emit MinCreatorRateBpsUpdated(_minCreatorRateBps);
     }
 
     /**
