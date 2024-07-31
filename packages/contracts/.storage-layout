@@ -64,12 +64,13 @@
 ➡ MintHouse
 =======================
 
-| Name            | Type                      | Slot | Offset | Bytes | Contract                    |
-|-----------------|---------------------------|------|--------|-------|-----------------------------|
-| price           | uint256                   | 0    | 0      | 32    | src/MintHouse.sol:MintHouse |
-| duration        | uint256                   | 1    | 0      | 32    | src/MintHouse.sol:MintHouse |
-| interval        | uint256                   | 2    | 0      | 32    | src/MintHouse.sol:MintHouse |
-| mint            | struct IMintHouse.Mint    | 3    | 0      | 128   | src/MintHouse.sol:MintHouse |
-| cultureIndex    | contract ICultureIndex    | 7    | 0      | 20    | src/MintHouse.sol:MintHouse |
-| zoraCreator1155 | contract IZoraCreator1155 | 8    | 0      | 20    | src/MintHouse.sol:MintHouse |
-| gnarsDAO        | address                   | 9    | 0      | 20    | src/MintHouse.sol:MintHouse |
+| Name                              | Type                      | Slot | Offset | Bytes | Contract                    |
+|-----------------------------------|---------------------------|------|--------|-------|-----------------------------|
+| price                             | uint96                    | 0    | 0      | 12    | src/MintHouse.sol:MintHouse |
+| duration                          | uint64                    | 0    | 12     | 8     | src/MintHouse.sol:MintHouse |
+| interval                          | uint256                   | 1    | 0      | 32    | src/MintHouse.sol:MintHouse |
+| mint                              | struct IMintHouse.Mint    | 2    | 0      | 128   | src/MintHouse.sol:MintHouse |
+| cultureIndex                      | contract ICultureIndex    | 6    | 0      | 20    | src/MintHouse.sol:MintHouse |
+| zoraCreator1155                   | contract IZoraCreator1155 | 7    | 0      | 20    | src/MintHouse.sol:MintHouse |
+| gnarsDAO                          | address                   | 8    | 0      | 20    | src/MintHouse.sol:MintHouse |
+| zoraCreatorFixedPriceSaleStrategy | address                   | 9    | 0      | 20    | src/MintHouse.sol:MintHouse |
