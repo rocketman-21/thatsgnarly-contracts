@@ -47,8 +47,8 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The duration of a single mint in seconds
     uint256 public duration;
 
-    // The time between each mint
-    uint256 public mintInterval;
+    // The minimum time between each mint
+    uint256 public interval;
 
     // The active mint
     IMintHouse.Mint public mint;
@@ -173,6 +173,17 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         duration = _duration;
 
         emit DurationUpdated(_duration);
+    }
+
+    /**
+     * @notice Set the interval between mints.
+     * @dev Only callable by the owner.
+     * @param _interval New interval between mints.
+     */
+    function setInterval(uint256 _interval) external override onlyOwner {
+        interval = _interval;
+
+        emit IntervalUpdated(_interval);
     }
 
     /**

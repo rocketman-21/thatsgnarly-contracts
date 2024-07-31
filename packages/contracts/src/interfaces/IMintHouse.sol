@@ -32,6 +32,8 @@ interface IMintHouseEvents {
 
     event DurationUpdated(uint256 duration);
 
+    event IntervalUpdated(uint256 interval);
+
     event CreatorRateBpsUpdated(uint256 rateBps);
 
     event MinCreatorRateBpsUpdated(uint256 rateBps);
@@ -135,6 +137,8 @@ interface IMintHouse is IMintHouseEvents {
     function setPrice(uint256 price) external;
 
     function setDuration(uint256 duration) external;
+
+    function setInterval(uint256 interval) external;
 
     function setCreatorRateBps(uint256 _creatorRateBps) external;
 
