@@ -110,6 +110,8 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         // set contracts
         cultureIndex = ICultureIndex(_cultureIndex);
         zoraCreator1155 = IZoraCreator1155(_zoraCreator1155);
+        zoraCreatorFixedPriceSaleStrategy = _zoraCreatorFixedPriceSaleStrategy;
+        gnarsDAO = _gnarsDAO;
     }
 
     /**
