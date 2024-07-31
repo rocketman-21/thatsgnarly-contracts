@@ -28,7 +28,7 @@ interface IMintHouseEvents {
         uint256 ethPaidToCreators
     );
 
-    event MintPriceUpdated(uint256 mintPrice);
+    event PriceUpdated(uint256 mintPrice);
 
     event CreatorRateBpsUpdated(uint256 rateBps);
 

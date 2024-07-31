@@ -36,7 +36,7 @@ import { UUPS } from "./proxy/UUPS.sol";
 
 contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable {
     // The minimum price accepted in a mint
-    uint256 public mintPrice;
+    uint256 public price;
 
     // The split of the winning bid that is reserved for the creator of the Art Piece in basis points
     uint256 public creatorRateBps;
@@ -80,7 +80,7 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         if (_mintParams.creatorRateBps < _mintParams.minCreatorRateBps) revert CREATOR_RATE_TOO_LOW();
 
         // set mint params
-        mintPrice = _mintParams.mintPrice;
+        price = _mintParams.price;
         duration = _mintParams.duration;
 
         // set creator payout params
@@ -156,10 +156,10 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * @notice Set the mint price.
      * @dev Only callable by the owner.
      */
-    function setMintPrice(uint256 _mintPrice) external override onlyOwner {
-        mintPrice = _mintPrice;
+    function setPrice(uint256 _price) external override onlyOwner {
+        price = _price;
 
-        emit MintPriceUpdated(_mintPrice);
+        emit PriceUpdated(_price);
     }
 
     /**
