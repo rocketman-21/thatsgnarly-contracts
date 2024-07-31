@@ -30,6 +30,9 @@ import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/O
 import { IMintHouse } from "./interfaces/IMintHouse.sol";
 import { ICultureIndex } from "./interfaces/ICultureIndex.sol";
 import { IZoraCreator1155 } from "./interfaces/IZoraCreator1155.sol";
+import { ICreatorRoyaltiesControl } from "./interfaces/ICreatorRoyaltiesControl.sol";
+import { IZoraCreatorFixedPriceSaleStrategy } from "./interfaces/IZoraCreatorFixedPriceSaleStrategy.sol";
+import { IMinter1155 } from "./interfaces/IMinter1155.sol";
 
 import { UUPS } from "./proxy/UUPS.sol";
 
@@ -37,10 +40,10 @@ import { UUPS } from "./proxy/UUPS.sol";
 
 contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable {
     // The minimum price accepted in a mint
-    uint256 public price;
+    uint96 public price;
 
     // The duration of a single mint in seconds
-    uint256 public duration;
+    uint64 public duration;
 
     // The minimum time between each mint
     uint256 public interval;
@@ -54,8 +57,12 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The Zora Creator ERC1155 contract
     IZoraCreator1155 public zoraCreator1155;
 
+    //TODO update this to initializer not hard coded
     // The GnarsDAO address to receive protocol rewards
     address public gnarsDAO = 0x72aD986ebAc0246D2b3c565ab2a1ce3a14cE6f88;
+
+    // The fixed price sale strategy contract from Zora
+    address public zoraCreatorFixedPriceSaleStrategy = 0x04E2516A2c207E84a1839755675dfd8eF6302F0a;
 
     ///                                                          ///
     ///                         CONSTRUCTOR                      ///
@@ -138,7 +145,7 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * @notice Set the mint price.
      * @dev Only callable by the owner.
      */
-    function setPrice(uint256 _price) external override onlyOwner {
+    function setPrice(uint96 _price) external override onlyOwner {
         price = _price;
 
         emit PriceUpdated(_price);
@@ -149,7 +156,7 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * @dev Only callable by the owner.
      * @param _duration New duration for the mint.
      */
-    function setDuration(uint256 _duration) external onlyOwner {
+    function setDuration(uint64 _duration) external onlyOwner {
         if (_duration < 60) revert DURATION_TOO_LOW();
 
         duration = _duration;
@@ -191,12 +198,50 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
 
         // Use try/catch to handle potential failure
         try cultureIndex.dropTopVotedPiece() returns (string memory tokenURI) {
+            // TODO handle creator
+            address creator = address(this);
+
             // create mint with referral to DAO
             uint256 tokenId = zoraCreator1155.setupNewTokenWithCreateReferral(tokenURI, 18446744073709551615, gnarsDAO);
 
-            // todo
-            uint256 startTime = block.timestamp;
-            uint256 endTime = startTime + duration;
+            // update royalties to creator
+            zoraCreator1155.updateRoyaltiesForToken(
+                tokenId,
+                ICreatorRoyaltiesControl.RoyaltyConfiguration({
+                    royaltyRecipient: creator,
+                    royaltyBPS: 500,
+                    royaltyMintSchedule: 0
+                })
+            );
+
+            // add permission for sale strategy
+            zoraCreator1155.addPermission(
+                tokenId,
+                zoraCreatorFixedPriceSaleStrategy,
+                zoraCreator1155.PERMISSION_BIT_MINTER()
+            );
+
+            uint64 startTime = uint64(block.timestamp);
+            uint64 endTime = startTime + duration;
+
+            // call sale contract and update sales config
+            zoraCreator1155.callSale(
+                tokenId,
+                IMinter1155(zoraCreatorFixedPriceSaleStrategy),
+                abi.encodeCall(
+                    IZoraCreatorFixedPriceSaleStrategy.setSale,
+                    (
+                        tokenId /* tokenId */,
+                        IZoraCreatorFixedPriceSaleStrategy.SalesConfig({
+                            saleStart: startTime /* saleStart */,
+                            saleEnd: endTime /* saleEnd */,
+                            maxTokensPerAddress: 0 /* maxTokensPerAddress - 0 means unlimited */,
+                            pricePerToken: price /* pricePerToken */,
+                            fundsRecipient: creator /* fundsRecipient */
+                        })
+                    )
+                )
+            );
 
             mint = Mint({ tokenId: tokenId, startTime: startTime, endTime: endTime, price: price });
 

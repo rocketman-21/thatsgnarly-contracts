@@ -69,8 +69,8 @@ interface IMintHouse is IMintHouseEvents {
      * @param interval The minimum time between each mint
      */
     struct MintParams {
-        uint256 price;
-        uint256 duration;
+        uint96 price;
+        uint64 duration;
         uint256 interval;
     }
 
@@ -80,9 +80,9 @@ interface IMintHouse is IMintHouseEvents {
 
     function unpause() external;
 
-    function setPrice(uint256 price) external;
+    function setPrice(uint96 price) external;
 
-    function setDuration(uint256 duration) external;
+    function setDuration(uint64 duration) external;
 
     function setInterval(uint256 interval) external;
 
