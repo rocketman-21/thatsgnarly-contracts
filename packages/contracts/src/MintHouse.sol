@@ -190,6 +190,10 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * catch the revert and pause this contract.
      */
     function _createMint() internal {
+        // ensure that `interval` has passed since the last mint
+        // startTime of last mint + interval < now
+        if (mint.startTime + interval > block.timestamp) revert DROP_NOT_COMPLETED();
+
         // TODO fill in
         // try revolutionToken.mint() returns (uint256 tokenId) {
         //     uint256 startTime = block.timestamp;
