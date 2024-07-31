@@ -44,7 +44,7 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The all time minimum split of the winning bid that is reserved for the creator of the Art Piece in basis points
     uint256 public minCreatorRateBps;
 
-    // The duration of a single mint
+    // The duration of a single mint in seconds
     uint256 public duration;
 
     // The time between each mint
@@ -160,6 +160,19 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         price = _price;
 
         emit PriceUpdated(_price);
+    }
+
+    /**
+     * @notice Set the duration of the mint.
+     * @dev Only callable by the owner.
+     * @param _duration New duration for the mint.
+     */
+    function setDuration(uint256 _duration) external onlyOwner {
+        if (_duration < 60) revert DURATION_TOO_LOW();
+
+        duration = _duration;
+
+        emit DurationUpdated(_duration);
     }
 
     /**

@@ -30,6 +30,8 @@ interface IMintHouseEvents {
 
     event PriceUpdated(uint256 price);
 
+    event DurationUpdated(uint256 duration);
+
     event CreatorRateBpsUpdated(uint256 rateBps);
 
     event MinCreatorRateBpsUpdated(uint256 rateBps);
@@ -75,6 +77,9 @@ interface IMintHouse is IMintHouseEvents {
 
     /// @dev Reverts if an existing mint is in progress.
     error DROP_ALREADY_IN_PROGRESS();
+
+    /// @dev Reverts if the duration is < 60 seconds.
+    error DURATION_TOO_LOW();
 
     struct Mint {
         // ERC1155 token ID
@@ -128,6 +133,8 @@ interface IMintHouse is IMintHouseEvents {
     function unpause() external;
 
     function setPrice(uint256 price) external;
+
+    function setDuration(uint256 duration) external;
 
     function setCreatorRateBps(uint256 _creatorRateBps) external;
 
