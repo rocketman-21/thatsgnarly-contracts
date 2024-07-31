@@ -240,6 +240,18 @@ interface ICultureIndex is ICultureIndexEvents {
     }
 
     /**
+     * @dev Struct defining an art piece for use in a token
+     * @param pieceId Unique identifier for the piece.
+     * @param creators Creators of the art piece.
+     * @param tokenURI The tokenURI of the piece for use in ZoraCreator1155
+     */
+    struct ArtPieceCondensed {
+        uint256 pieceId;
+        CreatorBps[] creators;
+        string tokenURI;
+    }
+
+    /**
      * @notice Returns the total number of art pieces.
      * @return The total count of art pieces.
      */
@@ -347,7 +359,7 @@ interface ICultureIndex is ICultureIndexEvents {
      * @dev This function also updates internal state to reflect the piece's dropped status.
      * @return The tokenURI (ipfs hash)
      */
-    function dropTopVotedPiece() external returns (string memory);
+    function dropTopVotedPiece() external returns (ArtPieceCondensed memory);
 
     /**
      * @notice Initializes a token's metadata descriptor

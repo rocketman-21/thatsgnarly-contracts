@@ -40,7 +40,7 @@ contract CultureIndex is
         keccak256("Vote(address from,uint256[] pieceIds,uint256 nonce,uint256 deadline)");
 
     // Constant for max number of creators
-    uint256 public constant MAX_NUM_CREATORS = 21;
+    uint256 public constant MAX_NUM_CREATORS = 1;
 
     /// @notice The maximum settable quorum votes basis points
     uint256 public constant MAX_QUORUM_VOTES_BPS = 6_000; // 6,000 basis points or 60%
@@ -572,7 +572,7 @@ contract CultureIndex is
      * @notice Pulls and drops the top-voted piece.
      * @return The top voted piece tokenURI
      */
-    function dropTopVotedPiece() public nonReentrant returns (string memory) {
+    function dropTopVotedPiece() public nonReentrant returns (ArtPieceCondensed memory) {
         if (msg.sender != dropperAdmin) revert NOT_DROPPER_ADMIN();
 
         uint256 pieceId = topVotedPieceId();
@@ -587,7 +587,12 @@ contract CultureIndex is
 
         emit PieceDropped(pieceId, msg.sender);
 
-        return pieces[pieceId].metadata.tokenURI;
+        return
+            ArtPieceCondensed({
+                pieceId: pieceId,
+                creators: pieces[pieceId].creators,
+                tokenURI: pieces[pieceId].metadata.tokenURI
+            });
     }
 
     function maxNameLength() external view returns (uint256) {
