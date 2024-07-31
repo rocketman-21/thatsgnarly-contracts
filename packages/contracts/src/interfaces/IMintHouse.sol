@@ -92,10 +92,13 @@ interface IMintHouse is IMintHouseEvents {
 
     function setCreatorRateBps(uint256 _creatorRateBps) external;
 
+    function setCultureIndex(ICultureIndex _cultureIndex) external;
+
     /**
      * @notice Initialize the mint house and base contracts.
      * @param initialOwner The address of the owner.
+     * @param cultureIndex The address of the culture index.
      * @param mintParams The mint params for mints.
      */
-    function initialize(address initialOwner, MintParams calldata mintParams) external;
+    function initialize(address initialOwner, address cultureIndex, MintParams calldata mintParams) external;
 }
