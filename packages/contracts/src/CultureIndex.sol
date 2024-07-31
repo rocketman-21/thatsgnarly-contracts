@@ -14,6 +14,12 @@ import { ICultureIndex } from "./interfaces/ICultureIndex.sol";
 import { MaxHeap } from "./MaxHeap.sol";
 import { CultureIndexStorageV1 } from "./storage/CultureIndexStorageV1.sol";
 
+/**
+ * @dev This contract has undergone the following modifications from Revolution:
+ * - Removed quorum requirements for dropping art pieces.
+ * - Changed the snapshot mechanism to use block.timestamp instead of block.number.
+ */
+
 contract CultureIndex is
     ICultureIndex,
     UUPS,
@@ -263,7 +269,7 @@ contract CultureIndex is
         newPiece.pieceId = pieceId;
         newPiece.metadata = metadata;
         newPiece.sponsor = msg.sender;
-        newPiece.creationBlock = block.number;
+        newPiece.creationBlock = block.timestamp;
 
         for (uint i; i < creatorArrayLength; i++) {
             newPiece.creators.push(creatorArray[i]);
@@ -292,9 +298,9 @@ contract CultureIndex is
      */
     function getAccountVotingPowerForPiece(uint256 pieceId, address account) public view returns (uint256) {
         if (pieceId >= _currentPieceId) revert INVALID_PIECE_ID();
-        uint256 creationBlock = pieces[pieceId].creationBlock;
+        uint256 creationTimestamp = pieces[pieceId].creationBlock;
 
-        return gnarsToken.getPastVotes(account, creationBlock - 1) * tokenVoteWeight;
+        return gnarsToken.getPastVotes(account, creationTimestamp - 1) * tokenVoteWeight;
     }
 
     /**
