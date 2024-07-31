@@ -153,7 +153,7 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     }
 
     /**
-     * @notice Set the mint mint price.
+     * @notice Set the mint price.
      * @dev Only callable by the owner.
      */
     function setMintPrice(uint256 _mintPrice) external override onlyOwner {
