@@ -29,6 +29,7 @@ import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/O
 
 import { IMintHouse } from "./interfaces/IMintHouse.sol";
 import { ICultureIndex } from "./interfaces/ICultureIndex.sol";
+import { IZoraCreator1155 } from "./interfaces/IZoraCreator1155.sol";
 
 import { UUPS } from "./proxy/UUPS.sol";
 
@@ -47,7 +48,11 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The active mint
     IMintHouse.Mint public mint;
 
+    // The contract holding art pieces to be minted
     ICultureIndex public cultureIndex;
+
+    // The Zora Creator ERC1155 contract
+    IZoraCreator1155 public zoraCreator1155;
 
     ///                                                          ///
     ///                         CONSTRUCTOR                      ///
@@ -65,11 +70,13 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * @dev This function can only be called once.
      * @param _initialOwner The address of the owner.
      * @param _cultureIndex The address of the culture index.
+     * @param _zoraCreator1155 The address of the Zora Creator ERC1155 contract.
      * @param _mintParams The mint params for mints.
      */
     function initialize(
         address _initialOwner,
         address _cultureIndex,
+        address _zoraCreator1155,
         MintParams calldata _mintParams
     ) external initializer {
         if (_cultureIndex == address(0)) revert ADDRESS_ZERO();
@@ -88,6 +95,7 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
 
         // set contracts
         cultureIndex = ICultureIndex(_cultureIndex);
+        zoraCreator1155 = IZoraCreator1155(_zoraCreator1155);
     }
 
     /**
