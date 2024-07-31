@@ -54,7 +54,7 @@ interface IMintHouse is IMintHouseEvents {
     struct Mint {
         // ERC1155 token ID
         uint256 tokenId;
-        // The current highest bid amount
+        // The price of the mint
         uint256 price;
         // The time that the mint started
         uint256 startTime;
