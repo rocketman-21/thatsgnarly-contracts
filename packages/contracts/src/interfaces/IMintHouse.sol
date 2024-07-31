@@ -17,6 +17,8 @@
 
 pragma solidity ^0.8.22;
 
+import { ICultureIndex } from "./ICultureIndex.sol";
+
 interface IMintHouseEvents {
     event MintCreated(uint256 indexed tokenId, uint256 startTime, uint256 endTime);
 
@@ -27,6 +29,8 @@ interface IMintHouseEvents {
     event IntervalUpdated(uint256 interval);
 
     event CreatorRateBpsUpdated(uint256 rateBps);
+
+    event CultureIndexUpdated(ICultureIndex cultureIndex);
 }
 
 interface IMintHouse is IMintHouseEvents {

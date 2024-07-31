@@ -50,6 +50,8 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The active mint
     IMintHouse.Mint public mint;
 
+    ICultureIndex public cultureIndex;
+
     ///                                                          ///
     ///                         CONSTRUCTOR                      ///
     ///                                                          ///
@@ -65,9 +67,17 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * populate configuration values, and pause the contract.
      * @dev This function can only be called once.
      * @param _initialOwner The address of the owner.
+     * @param _cultureIndex The address of the culture index.
      * @param _mintParams The mint params for mints.
      */
-    function initialize(address _initialOwner, MintParams calldata _mintParams) external initializer {
+    function initialize(
+        address _initialOwner,
+        address _cultureIndex,
+        MintParams calldata _mintParams
+    ) external initializer {
+        if (_cultureIndex == address(0)) revert ADDRESS_ZERO();
+        if (_initialOwner == address(0)) revert ADDRESS_ZERO();
+
         __Pausable_init();
         __ReentrancyGuard_init();
         __Ownable_init(_initialOwner);
@@ -79,6 +89,9 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         duration = _mintParams.duration;
         interval = _mintParams.interval;
         creatorRateBps = _mintParams.creatorRateBps;
+
+        // set contracts
+        cultureIndex = ICultureIndex(_cultureIndex);
     }
 
     /**
@@ -120,9 +133,10 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     function unpause() external override onlyOwner {
         _unpause();
 
-        if (mint.startTime == 0 || mint.settled) {
-            _createMint();
-        }
+        // TODO
+        // if (mint.startTime == 0) {
+        //     _createMint();
+        // }
     }
 
     /**
@@ -157,6 +171,16 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
         interval = _interval;
 
         emit IntervalUpdated(_interval);
+    }
+
+    /**
+     * @notice Set the token CultureIndex.
+     * @dev Only callable by the owner
+     */
+    function setCultureIndex(ICultureIndex _cultureIndex) external onlyOwner nonReentrant {
+        cultureIndex = _cultureIndex;
+
+        emit CultureIndexUpdated(_cultureIndex);
     }
 
     /**
