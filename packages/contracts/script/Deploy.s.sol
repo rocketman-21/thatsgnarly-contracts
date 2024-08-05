@@ -110,7 +110,7 @@ contract DeployContracts is Script {
             _zoraCreator1155: zora1155,
             _gnarsDAO: gnarsDAO,
             _zoraCreatorFixedPriceSaleStrategy: zoraCreatorFixedPriceSaleStrategy,
-            _mintParams: IMintHouse.MintParams({ price: 0.1 ether, duration: 1 days, interval: 7 days })
+            _mintParams: IMintHouse.MintParams({ price: 0.1 ether, duration: 7 days, interval: 1 days })
         });
     }
 
