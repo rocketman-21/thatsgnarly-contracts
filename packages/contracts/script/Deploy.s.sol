@@ -10,6 +10,8 @@ import { ERC1967Proxy } from "../src/proxy/ERC1967Proxy.sol";
 import { MaxHeap } from "../src/MaxHeap.sol";
 import { CultureIndex } from "../src/CultureIndex.sol";
 import { ICultureIndex } from "../src/interfaces/ICultureIndex.sol";
+import { IMintHouse } from "../src/interfaces/IMintHouse.sol";
+import { MintHouse } from "../src/MintHouse.sol";
 
 contract DeployContracts is Script {
     using Strings for uint256;
@@ -21,11 +23,15 @@ contract DeployContracts is Script {
 
     address zoraCreatorFixedPriceSaleStrategy = 0x04E2516A2c207E84a1839755675dfd8eF6302F0a;
 
+    address zora1155 = 0x46D27c309F0942abC0C4fE8b77AB8d06D5D6B1A3;
+
     address cultureIndexImpl;
     address maxHeapImpl;
+    address mintHouseImpl;
 
     address cultureIndexProxy;
     address maxHeapProxy;
+    address mintHouseProxy;
 
     address initialOwner;
 
@@ -61,6 +67,10 @@ contract DeployContracts is Script {
         return address(new ERC1967Proxy(maxHeapImpl, ""));
     }
 
+    function deployMintHouseProxy() private returns (address) {
+        return address(new ERC1967Proxy(mintHouseImpl, ""));
+    }
+
     function initializeProxies() private {
         CultureIndex(cultureIndexProxy).initialize({
             _initialOwner: initialOwner,
@@ -91,6 +101,19 @@ contract DeployContracts is Script {
 
         // initialize maxheap
         MaxHeap(maxHeapProxy).initialize({ _initialOwner: initialOwner, _admin: cultureIndexProxy });
+
+        MintHouse(mintHouseProxy).initialize({
+            _initialOwner: initialOwner,
+            _cultureIndex: cultureIndexProxy,
+            _zoraCreator1155: zora1155,
+            _gnarsDAO: gnarsDAO,
+            _zoraCreatorFixedPriceSaleStrategy: zoraCreatorFixedPriceSaleStrategy,
+            _mintParams: IMintHouse.MintParams({ price: 0.1 ether, duration: 1 days, interval: 7 days })
+        });
+    }
+
+    function deployMintHouseImpl() private returns (address) {
+        return address(new MintHouse());
     }
 
     function deployCultureIndexImpl() private returns (address) {
@@ -107,8 +130,10 @@ contract DeployContracts is Script {
         vm.writeFile(filePath, "");
         vm.writeLine(filePath, string(abi.encodePacked("CultureIndex: ", addressToString(cultureIndexImpl))));
         vm.writeLine(filePath, string(abi.encodePacked("MaxHeap: ", addressToString(maxHeapImpl))));
+        vm.writeLine(filePath, string(abi.encodePacked("MintHouse: ", addressToString(mintHouseImpl))));
         vm.writeLine(filePath, string(abi.encodePacked("CultureIndex Proxy: ", addressToString(cultureIndexProxy))));
         vm.writeLine(filePath, string(abi.encodePacked("MaxHeap Proxy: ", addressToString(maxHeapProxy))));
+        vm.writeLine(filePath, string(abi.encodePacked("MintHouse Proxy: ", addressToString(mintHouseProxy))));
     }
 
     function addressToString(address _addr) private pure returns (string memory) {
