@@ -13,6 +13,8 @@ interface ICultureIndexEvents {
 
     event ERC721VotingTokenLocked();
 
+    event DropperAdminUpdated(address oldDropperAdmin, address newDropperAdmin);
+
     /**
      * @dev Emitted when a new piece is created.
      * @param pieceId Unique identifier for the newly created piece.

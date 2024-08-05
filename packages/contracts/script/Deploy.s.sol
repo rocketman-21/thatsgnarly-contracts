@@ -76,7 +76,7 @@ contract DeployContracts is Script {
     function initializeProxies() private {
         CultureIndex(cultureIndexProxy).initialize({
             _initialOwner: initialOwner,
-            _dropperAdmin: initialOwner,
+            _dropperAdmin: mintHouseProxy,
             _gnarsToken: token,
             _maxHeap: maxHeapProxy,
             _cultureIndexParams: ICultureIndex.CultureIndexParams({

@@ -488,6 +488,17 @@ contract CultureIndex is
     }
 
     /**
+     * @notice Admin function for setting the dropper admin
+     * @param newDropperAdmin The address of the new dropper admin
+     */
+    function setDropperAdmin(address newDropperAdmin) external onlyOwner {
+        if (newDropperAdmin == address(0)) revert ADDRESS_ZERO();
+        emit DropperAdminUpdated(dropperAdmin, newDropperAdmin);
+
+        dropperAdmin = newDropperAdmin;
+    }
+
+    /**
      * @notice Fetch the top-voted pieceId
      * @return The top-voted pieceId
      */
