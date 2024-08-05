@@ -38,7 +38,7 @@ contract DeployContracts is Script {
     function run() public {
         uint256 chainID = vm.envUint("CHAIN_ID");
         uint256 key = vm.envUint("PRIVATE_KEY");
-        initialOwner = vm.addr(key);
+        initialOwner = vm.envAddress("INITIAL_OWNER");
 
         console2.log("Initial Owner Address:", initialOwner);
 
@@ -48,9 +48,11 @@ contract DeployContracts is Script {
 
         cultureIndexImpl = deployCultureIndexImpl();
         maxHeapImpl = deployMaxHeapImpl();
+        mintHouseImpl = deployMintHouseImpl();
 
         cultureIndexProxy = deployCultureIndexProxy();
         maxHeapProxy = deployMaxHeapProxy();
+        mintHouseProxy = deployMintHouseProxy();
 
         initializeProxies();
 
@@ -84,7 +86,7 @@ contract DeployContracts is Script {
                 tokenVoteWeight: 1e18 * 10,
                 pointsVoteWeight: 0,
                 name: "That's Gnarly",
-                description: "Become a part of Gnars DAO onchain history, together.",
+                description: "Become a part of Gnars DAO history, onchain.",
                 checklist: "",
                 template: "",
                 requiredMediaType: ICultureIndex.MediaType.NONE,
