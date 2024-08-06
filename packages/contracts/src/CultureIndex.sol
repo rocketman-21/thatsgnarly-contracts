@@ -163,11 +163,14 @@ contract CultureIndex is
         uint256 imageLength = bytes(metadata.image).length;
         uint256 animationUrlLength = bytes(metadata.animationUrl).length;
         uint256 nameLength = bytes(metadata.name).length;
+        uint256 textLength = bytes(metadata.text).length;
 
         if (mediaType == MediaType.IMAGE && imageLength == 0) {
             revert INVALID_IMAGE();
         } else if ((mediaType == MediaType.ANIMATION || mediaType == MediaType.AUDIO) && animationUrlLength == 0) {
             revert INVALID_ANIMATION_URL();
+        } else if (mediaType == MediaType.TEXT && textLength == 0) {
+            revert INVALID_TEXT();
         }
 
         // ensure all fields of metadata are within reasonable bounds
@@ -176,6 +179,8 @@ contract CultureIndex is
         if (imageLength > PIECE_DATA_MAXIMUMS.image) revert INVALID_IMAGE();
 
         if (animationUrlLength > PIECE_DATA_MAXIMUMS.animationUrl) revert INVALID_ANIMATION_URL();
+
+        if (textLength > PIECE_DATA_MAXIMUMS.text) revert INVALID_TEXT();
 
         //ensure name is not too large
         if (nameLength > PIECE_DATA_MAXIMUMS.name) revert INVALID_NAME();
