@@ -23,7 +23,7 @@ contract DeployContracts is Script {
 
     address zoraCreatorFixedPriceSaleStrategy = 0x04E2516A2c207E84a1839755675dfd8eF6302F0a;
 
-    address zora1155 = 0x46D27c309F0942abC0C4fE8b77AB8d06D5D6B1A3;
+    address zora1155 = 0xF9a6470C704E391a64d1565ba4d50ad9C456b1dC;
 
     address cultureIndexImpl;
     address maxHeapImpl;

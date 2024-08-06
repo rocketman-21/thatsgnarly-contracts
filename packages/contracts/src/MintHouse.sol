@@ -36,8 +36,6 @@ import { IMinter1155 } from "./interfaces/IMinter1155.sol";
 
 import { UUPS } from "./proxy/UUPS.sol";
 
-//TODO use 1e6 for bps - to mimic splits
-
 contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable {
     // The minimum price accepted in a mint
     uint96 public price;
@@ -57,7 +55,6 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     // The Zora Creator ERC1155 contract
     IZoraCreator1155 public zoraCreator1155;
 
-    //TODO update this to initializer not hard coded
     // The GnarsDAO address to receive protocol rewards
     address public gnarsDAO;
 
@@ -95,6 +92,9 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
     ) external initializer {
         if (_cultureIndex == address(0)) revert ADDRESS_ZERO();
         if (_initialOwner == address(0)) revert ADDRESS_ZERO();
+        if (_zoraCreator1155 == address(0)) revert ADDRESS_ZERO();
+        if (_gnarsDAO == address(0)) revert ADDRESS_ZERO();
+        if (_zoraCreatorFixedPriceSaleStrategy == address(0)) revert ADDRESS_ZERO();
 
         __Pausable_init();
         __ReentrancyGuard_init();
@@ -118,8 +118,6 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      * @notice Create a new mint.
      */
     function createNewMint() external override nonReentrant whenNotPaused {
-        // TODO add checks here
-
         _createMint();
     }
 
@@ -140,11 +138,6 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
      */
     function unpause() external override onlyOwner {
         _unpause();
-
-        // TODO
-        // if (mint.startTime == 0) {
-        //     _createMint();
-        // }
     }
 
     /**
@@ -204,12 +197,13 @@ contract MintHouse is IMintHouse, UUPS, PausableUpgradeable, ReentrancyGuardUpgr
 
         // Use try/catch to handle potential failure
         try cultureIndex.dropTopVotedPiece() returns (ICultureIndex.ArtPieceCondensed memory artPiece) {
-            // TODO handle creator
+            // Only 1 creator supported for now!
             address creator = artPiece.creators[0].creator;
 
             // create mint with referral to DAO
             uint256 tokenId = zoraCreator1155.setupNewTokenWithCreateReferral(
                 artPiece.tokenURI,
+                // open edition
                 18446744073709551615,
                 gnarsDAO
             );
