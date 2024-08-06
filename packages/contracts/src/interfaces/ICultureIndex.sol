@@ -204,8 +204,9 @@ interface ICultureIndex is ICultureIndexEvents {
         string description;
         MediaType mediaType;
         string image;
-        string tokenURI;
+        string text;
         string animationUrl;
+        string tokenURI;
     }
 
     // Struct representing a creator of an art piece and their basis points.
