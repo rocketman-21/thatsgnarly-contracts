@@ -18,6 +18,7 @@ import { CultureIndexStorageV1 } from "./storage/CultureIndexStorageV1.sol";
  * @dev This contract has undergone the following modifications from Revolution:
  * - Removed quorum requirements for dropping art pieces.
  * - Changed the snapshot mechanism to use block.timestamp instead of block.number.
+ * - Removed the text field from the ArtPieceMetadata struct in favor of tokenURI
  */
 
 contract CultureIndex is
@@ -39,7 +40,7 @@ contract CultureIndex is
         keccak256("Vote(address from,uint256[] pieceIds,uint256 nonce,uint256 deadline)");
 
     // Constant for max number of creators
-    uint256 public constant MAX_NUM_CREATORS = 21;
+    uint256 public constant MAX_NUM_CREATORS = 1;
 
     /// @notice The maximum settable quorum votes basis points
     uint256 public constant MAX_QUORUM_VOTES_BPS = 6_000; // 6,000 basis points or 60%
@@ -161,8 +162,8 @@ contract CultureIndex is
 
         uint256 imageLength = bytes(metadata.image).length;
         uint256 animationUrlLength = bytes(metadata.animationUrl).length;
-        uint256 textLength = bytes(metadata.text).length;
         uint256 nameLength = bytes(metadata.name).length;
+        uint256 textLength = bytes(metadata.text).length;
 
         if (mediaType == MediaType.IMAGE && imageLength == 0) {
             revert INVALID_IMAGE();
@@ -189,6 +190,11 @@ contract CultureIndex is
         // ensure animation url starts with ipfs://
         if (animationUrlLength > 0 && !Strings.equal(_substring(metadata.animationUrl, 0, 7), (ipfsPrefix)))
             revert INVALID_ANIMATION_URL();
+
+        // ensure tokenURI is not empty and starts with ipfs, and isn't huge
+        if (bytes(metadata.tokenURI).length == 0) revert INVALID_TOKEN_URI();
+        if (bytes(metadata.tokenURI).length > 200) revert INVALID_TOKEN_URI();
+        if (!Strings.equal(_substring(metadata.tokenURI, 0, 7), (ipfsPrefix))) revert INVALID_TOKEN_URI();
 
         // ensure image url starts with ipfs:// or data:image/svg+xml;base64,
         if (imageLength > 0) {
@@ -487,6 +493,17 @@ contract CultureIndex is
     }
 
     /**
+     * @notice Admin function for setting the dropper admin
+     * @param newDropperAdmin The address of the new dropper admin
+     */
+    function setDropperAdmin(address newDropperAdmin) external onlyOwner {
+        if (newDropperAdmin == address(0)) revert ADDRESS_ZERO();
+        emit DropperAdminUpdated(dropperAdmin, newDropperAdmin);
+
+        dropperAdmin = newDropperAdmin;
+    }
+
+    /**
      * @notice Fetch the top-voted pieceId
      * @return The top-voted pieceId
      */
@@ -569,7 +586,7 @@ contract CultureIndex is
 
     /**
      * @notice Pulls and drops the top-voted piece.
-     * @return The top voted piece
+     * @return The top voted piece tokenURI
      */
     function dropTopVotedPiece() public nonReentrant returns (ArtPieceCondensed memory) {
         if (msg.sender != dropperAdmin) revert NOT_DROPPER_ADMIN();
@@ -587,10 +604,10 @@ contract CultureIndex is
         emit PieceDropped(pieceId, msg.sender);
 
         return
-            ICultureIndex.ArtPieceCondensed({
+            ArtPieceCondensed({
                 pieceId: pieceId,
                 creators: pieces[pieceId].creators,
-                sponsor: pieces[pieceId].sponsor
+                tokenURI: pieces[pieceId].metadata.tokenURI
             });
     }
 
