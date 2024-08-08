@@ -13,6 +13,8 @@ interface ICultureIndexEvents {
 
     event ERC721VotingTokenLocked();
 
+    event DropperAdminUpdated(address oldDropperAdmin, address newDropperAdmin);
+
     /**
      * @dev Emitted when a new piece is created.
      * @param pieceId Unique identifier for the newly created piece.
@@ -165,6 +167,9 @@ interface ICultureIndex is ICultureIndexEvents {
     /// @dev Reverts if the creator's BPS specified is invalid
     error INVALID_CREATOR_BPS();
 
+    /// @dev Reverts if the tokenURI is invalid
+    error INVALID_TOKEN_URI();
+
     ///                                                          ///
     ///                         CONSTANTS                        ///
     ///                                                          ///
@@ -202,6 +207,7 @@ interface ICultureIndex is ICultureIndexEvents {
         string image;
         string text;
         string animationUrl;
+        string tokenURI;
     }
 
     // Struct representing a creator of an art piece and their basis points.
@@ -228,18 +234,6 @@ interface ICultureIndex is ICultureIndexEvents {
         uint256 creationBlock;
     }
 
-    /**
-     * @dev Struct defining an art piece for use in a token
-     *@param pieceId Unique identifier for the piece.
-     * @param creators Creators of the art piece.
-     * @param sponsor Address that created the piece.
-     */
-    struct ArtPieceCondensed {
-        uint256 pieceId;
-        CreatorBps[] creators;
-        address sponsor;
-    }
-
     // Constant for max number of creators
     function MAX_NUM_CREATORS() external view returns (uint256);
 
@@ -247,6 +241,18 @@ interface ICultureIndex is ICultureIndexEvents {
     struct Vote {
         address voterAddress;
         uint256 weight;
+    }
+
+    /**
+     * @dev Struct defining an art piece for use in a token
+     * @param pieceId Unique identifier for the piece.
+     * @param creators Creators of the art piece.
+     * @param tokenURI The tokenURI of the piece for use in ZoraCreator1155
+     */
+    struct ArtPieceCondensed {
+        uint256 pieceId;
+        CreatorBps[] creators;
+        string tokenURI;
     }
 
     /**
@@ -355,7 +361,7 @@ interface ICultureIndex is ICultureIndexEvents {
     /**
      * @notice Officially release or "drop" the art piece with the most votes.
      * @dev This function also updates internal state to reflect the piece's dropped status.
-     * @return The ArtPiece struct of the top voted piece that was just dropped.
+     * @return The tokenURI (ipfs hash)
      */
     function dropTopVotedPiece() external returns (ArtPieceCondensed memory);
 
