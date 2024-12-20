@@ -1,0 +1,76 @@
+👁👁 STORAGE LAYOUT snapshot 👁👁
+=======================
+
+=======================
+➡ ERC1967Proxy
+=======================
+
+| Name | Type | Slot | Offset | Bytes | Contract |
+|------|------|------|--------|-------|----------|
+
+=======================
+➡ ERC1967Upgrade
+=======================
+
+| Name | Type | Slot | Offset | Bytes | Contract |
+|------|------|------|--------|-------|----------|
+
+=======================
+➡ UUPS
+=======================
+
+| Name | Type | Slot | Offset | Bytes | Contract |
+|------|------|------|--------|-------|----------|
+
+=======================
+➡ CultureIndex
+=======================
+
+| Name                   | Type                                                              | Slot | Offset | Bytes | Contract                          |
+|------------------------|-------------------------------------------------------------------|------|--------|-------|-----------------------------------|
+| nonces                 | mapping(address => uint256)                                       | 0    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| maxHeap                | contract MaxHeap                                                  | 1    | 0      | 20    | src/CultureIndex.sol:CultureIndex |
+| gnarsToken             | contract IERC721Votes                                             | 2    | 0      | 20    | src/CultureIndex.sol:CultureIndex |
+| minVotingPowerToVote   | uint256                                                           | 3    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| minVotingPowerToCreate | uint256                                                           | 4    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| quorumVotesBPS         | uint256                                                           | 5    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| tokenVoteWeight        | uint256                                                           | 6    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| pointsVoteWeight       | uint256                                                           | 7    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| name                   | string                                                            | 8    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| description            | string                                                            | 9    | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| checklist              | string                                                            | 10   | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| template               | string                                                            | 11   | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| pieces                 | mapping(uint256 => struct ICultureIndex.ArtPiece)                 | 12   | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| _currentPieceId        | uint256                                                           | 13   | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| votes                  | mapping(uint256 => mapping(address => struct ICultureIndex.Vote)) | 14   | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| totalVoteWeights       | mapping(uint256 => uint256)                                       | 15   | 0      | 32    | src/CultureIndex.sol:CultureIndex |
+| dropperAdmin           | address                                                           | 16   | 0      | 20    | src/CultureIndex.sol:CultureIndex |
+| PIECE_DATA_MAXIMUMS    | struct ICultureIndex.PieceMaximums                                | 17   | 0      | 160   | src/CultureIndex.sol:CultureIndex |
+| requiredMediaType      | enum ICultureIndex.MediaType                                      | 22   | 0      | 1     | src/CultureIndex.sol:CultureIndex |
+| requiredMediaPrefix    | enum ICultureIndex.RequiredMediaPrefix                            | 22   | 1      | 1     | src/CultureIndex.sol:CultureIndex |
+
+=======================
+➡ MaxHeap
+=======================
+
+| Name  | Type                                    | Slot | Offset | Bytes | Contract                |
+|-------|-----------------------------------------|------|--------|-------|-------------------------|
+| admin | address                                 | 0    | 0      | 20    | src/MaxHeap.sol:MaxHeap |
+| heap  | mapping(uint256 => uint256)             | 1    | 0      | 32    | src/MaxHeap.sol:MaxHeap |
+| size  | uint256                                 | 2    | 0      | 32    | src/MaxHeap.sol:MaxHeap |
+| items | mapping(uint256 => struct MaxHeap.Item) | 3    | 0      | 32    | src/MaxHeap.sol:MaxHeap |
+
+=======================
+➡ MintHouse
+=======================
+
+| Name                              | Type                      | Slot | Offset | Bytes | Contract                    |
+|-----------------------------------|---------------------------|------|--------|-------|-----------------------------|
+| price                             | uint96                    | 0    | 0      | 12    | src/MintHouse.sol:MintHouse |
+| duration                          | uint64                    | 0    | 12     | 8     | src/MintHouse.sol:MintHouse |
+| interval                          | uint256                   | 1    | 0      | 32    | src/MintHouse.sol:MintHouse |
+| mint                              | struct IMintHouse.Mint    | 2    | 0      | 128   | src/MintHouse.sol:MintHouse |
+| cultureIndex                      | contract ICultureIndex    | 6    | 0      | 20    | src/MintHouse.sol:MintHouse |
+| zoraCreator1155                   | contract IZoraCreator1155 | 7    | 0      | 20    | src/MintHouse.sol:MintHouse |
+| gnarsDAO                          | address                   | 8    | 0      | 20    | src/MintHouse.sol:MintHouse |
+| zoraCreatorFixedPriceSaleStrategy | address                   | 9    | 0      | 20    | src/MintHouse.sol:MintHouse |

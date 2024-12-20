@@ -1,0 +1,10 @@
+name: "Contracts"
+
+on:
+  push:
+
+jobs:
+  contracts:
+    name: Gnarly Contracts
+    uses: ./.github/workflows/gnarly_contracts.yml
+    secrets: inherit
